@@ -112,7 +112,7 @@ Manually rerun:
 
 ```bash
 sudo apt update -y && sudo apt install make python3.12-venv tree -y
-
+```
 
 ## Web Scraping with Headless Chrome
 
