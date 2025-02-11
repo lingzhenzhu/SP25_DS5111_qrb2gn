@@ -113,3 +113,100 @@ Manually rerun:
 ```bash
 sudo apt update -y && sudo apt install make python3.12-venv tree -y
 
+
+## Web Scraping with Headless Chrome
+
+This project demonstrates how to set up a virtual machine (VM) for web scraping using headless Chrome.
+
+---
+
+## **Step 1: Install Chrome Headless**
+Run the following command to install Chrome:
+
+```bash
+./install_chrome_headless.sh
+```
+
+To verify installation, run:
+
+```bash
+google-chrome-stable --version
+google-chrome-stable --headless --disable-gpu --dump-dom https://example.com/
+```
+
+---
+
+## **Step 2: Set Up Python Environment**
+
+This project requires `pandas` and `lxml`. To set up:
+
+```bash
+python3 -m venv env
+source env/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+---
+
+## **Step 3: Using the Makefile**
+
+Instead of manually setting up the environment, you can use `Makefile`:
+
+```bash
+make update
+```
+
+This will create a virtual environment and install dependencies.
+
+---
+
+## **Step 4: Scraping Data**
+
+To scrape Yahoo Finance gainers:
+
+```bash
+make ygainers.csv
+```
+
+To scrape Wall Street Journal gainers:
+
+```bash
+make wjsgainers.csv
+```
+
+---
+
+## **Step 5: Project Structure**
+
+Run the following command to display the project structure:
+
+```bash
+tree <your project-repo> -I env
+```
+
+Example output:
+
+```
+.
+├── install_chrome_headless.sh
+├── Makefile
+├── README.md
+├── requirements.txt
+├── ygainers.html
+├── ygainers.csv
+├── wjsgainers.html
+└── wjsgainers.csv
+```
+
+---
+
+## **Next Steps**
+
+Now that your environment is set up, you can expand this project by:
+
+- Scraping additional stock market data
+- Automating execution with cron jobs
+- Analyzing and visualizing stock trends
+
+
