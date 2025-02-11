@@ -1,4 +1,5 @@
-# Project Setup Guide for a New Virtual Machine (VM)
+# Repo for DS 5111
+## Project Setup Guide for a New Virtual Machine (VM)
 
 This guide provides step-by-step instructions to set up a new virtual machine (VM) for this project, ensuring all dependencies are installed and configured properly.
 
