@@ -1,3 +1,4 @@
+[![Feature Validation](https://github.com/lingzhenzhu/SP25_DS5111_qrb2gn/actions/workflows/validations.yml/badge.svg)](https://github.com/lingzhenzhu/SP25_DS5111_qrb2gn/actions/workflows/validations.yml)
 # Repo for DS 5111
 ## Project Setup Guide for a New Virtual Machine (VM)
 
