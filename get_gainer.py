@@ -36,6 +36,10 @@ class ProcessGainer:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Error: Missing required argument 'choice'.")
+        print("Usage: python get_gainer.py <choice>")
+        sys.exit(1)
     choice = sys.argv[1]
     factory = GainerFactory(choice)
     downloader = factory.get_downloader()
