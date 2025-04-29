@@ -202,12 +202,104 @@ Example output:
 
 ---
 
-## **Next Steps**
+## GitHub Actions CI Setup for Linting and Testing
 
-Now that your environment is set up, you can expand this project by:
+### Overview
+This repository uses **GitHub Actions** to automatically run **code linting** and **unit tests** on every `push`, `pull request`, and manual trigger.  
+This ensures the codebase remains clean, consistent, and functional before merging changes into the `main` branch.
 
-- Scraping additional stock market data
-- Automating execution with cron jobs
-- Analyzing and visualizing stock trends
+---
 
+## Setup Summary
 
+### 1. Workflow Configuration
+A GitHub Actions workflow is defined at:
+```
+.github/workflows/validations.yml
+```
+
+The workflow is triggered by:
+```yaml
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+```
+- **push**: Runs tests on every push to any branch.
+- **pull_request**: Automatically runs when a PR is created or updated.
+- **workflow_dispatch**: Allows manual runs from the GitHub UI.
+
+---
+
+### 2. What the Workflow Does
+
+The workflow consists of three main steps:
+1. **Set up Python environment**  
+   Using `actions/setup-python` to create a Python 3.10 environment.
+   
+2. **Install Dependencies**  
+   Installing project dependencies using:
+   ```bash
+   make update
+   ```
+   (this sets up a virtual environment and installs packages from `requirements.txt`)
+
+3. **Run Linter and Tests**  
+   Executing:
+   ```bash
+   make test
+   ```
+   - `make lint` runs **Pylint** linter on the source code.
+   - `make test` runs **Pytest** on the tests directory.
+   - A detailed report is shown in the GitHub Actions log.
+
+---
+
+### 3. Linter and Testing Commands (Makefile)
+
+The Makefile includes the following jobs:
+
+| Command | Purpose |
+|:---|:---|
+| `make env` | Create and activate a Python virtual environment |
+| `make update` | Install or update dependencies from `requirements.txt` |
+| `make lint` | Run **Pylint** linter on the source code |
+| `make test` | Run **Pylint** and **Pytest** together, summarize scores and results |
+| `make check` | (Optional) Alias for `make test`, for a quick full check |
+
+Example usage:
+
+```bash
+make update
+make test
+```
+
+---
+
+### 4. Test Code Structure
+
+All test files are placed under the `tests/` directory.
+
+- Each module has a corresponding test file starting with `test_`.
+- For example, the module `bin/normalize_csv.py` has a test file:
+  ```
+  tests/test_normalize_csv.py
+  ```
+
+- Test functions must start with `test_` to be automatically recognized by **pytest**.
+
+---
+
+### 5. Badge
+
+A **GitHub Actions badge** is added to the `README.md` to display the latest workflow status:  
+(Replace `username` and `repository` with your actual GitHub account and repo name)
+
+```markdown
+![Build Status](https://github.com/<username>/<repository>/actions/workflows/validations.yml/badge.svg?branch=main)
+```
+
+- ✅ Green badge indicates that tests passed successfully.
+- ❌ Red badge indicates that linting or tests failed.
+
+---
