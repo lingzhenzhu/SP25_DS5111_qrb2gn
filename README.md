@@ -303,3 +303,34 @@ A **GitHub Actions badge** is added to the `README.md` to display the latest wor
 - ❌ Red badge indicates that linting or tests failed.
 
 ---
+## Object-Oriented Refactoring Summary (Lab 06)
+
+In this phase, we refactored the CSV normalizer into a fully object-oriented pipeline using best practices from design patterns such as Factory and Template Method. The goal was to build a scalable and testable architecture that separates concerns cleanly.
+
+### Key Refactor Steps
+
+- **Abstract Base Classes**: Defined in `bin/gainers/base.py`, we created `GainerDownload` and `GainerProcess` as abstract base classes to enforce implementation contracts for all downloader and processor subclasses.
+
+- **Factory Pattern**: In `bin/gainers/factory.py`, we implemented `GainerFactory`, which dynamically returns the appropriate subclass of downloader and processor based on the user’s source selection (`"yahoo"` or `"wsj"`).
+
+- **Concrete Implementations**:
+  - `GainerDownloadYahoo` / `GainerProcessYahoo` in `yahoo.py`
+  - `GainerDownloadWSJ` / `GainerProcessWSJ` in `wsj.py`
+  - These subclasses handle source-specific downloading and normalization logic.
+
+- **Template Pattern Execution**: In `get_gainer.py`, the `ProcessGainer` class defines the unified flow:
+  1. Download raw HTML
+  2. Normalize data into standard format
+  3. Save output with timestamp
+
+- **Test Isolation with Mocking**:
+  - In `tests/test_gainers.py`, we added `MockDownloader` to avoid network calls.
+  - Temporary HTML files are used to test the normalization logic in isolation.
+  - Tests assert that:
+    - The normalized DataFrame has the correct structure (`symbol`, `price`, `price_change`, `price_percent_change`)
+    - WSJ stock symbols are correctly extracted and capitalized from bracketed names
+
+- **Makefile Integration**: A new command was added:
+  ```bash
+  make gainers SRC=yahoo
+
