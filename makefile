@@ -34,6 +34,9 @@ while True:\n\
 wsjgainers.csv: wsjgainers.html
 	python -c "import pandas as pd; raw = pd.read_html('wsjgainers.html'); raw[0].to_csv('wsjgainers.csv')"
 
+gainers:
+	. env/bin/activate && python get_gainer.py $(SRC)
+
 lint:
 	env/bin/pylint $(or $(file),bin/*.py)
 
