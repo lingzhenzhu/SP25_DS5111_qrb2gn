@@ -1,6 +1,6 @@
 """
-Normalize Gainers CSV files from Yahoo Finance or WSJ Market Data
-into a unified format: symbol, price, price_change, price_percent_change.
+Input normalize gainers .csv files from Yahoo Finance or WSJ Market Data
+into a unified format and output a normalized .csv file
 """
 
 import os
@@ -9,14 +9,16 @@ import pandas as pd
 
 def normalize_csv(input_file):
     """
-    Normalize gainers csv from different sources (Yahoo, WSJ)
-    into a standard format: symbol, price, price_change, price_percent_change.
+    Input: raw csv file from Yahoo or WSJ gainers data
+    Output: normalized csv file
+    Function: Set columns as:  symbol, price, price_change, price_percent_change
+    and check the content.
     """
-    assert os.path.exists(input_file), f"❌ File {input_file} does not exist."
+    assert os.path.exists(input_file), f"File {input_file} does not exist."
 
     # Read the input csv
     df = pd.read_csv(input_file)
-    print(f"✅ Loaded {input_file} with shape {df.shape}")
+    print(f"Loaded {input_file} with shape {df.shape}")
 
     # Try to detect source based on columns
     if {'Symbol', 'Price', 'Change', 'Change %'}.issubset(df.columns):
@@ -32,7 +34,8 @@ def normalize_csv(input_file):
         df['symbol'] = df['symbol'].astype(str).str.upper()
         df['price'] = df['price'].astype(str).str.replace(',', '').astype(float)
         df['price_change'] = df['price_change'].astype(str).str.replace(',', '').astype(float)
-        df['price_percent_change'] = df['price_percent_change'].astype(str).str.strip('%').astype(float)
+        df['price_percent_change'] = df['price_percent_change'].astype(str)
+        df['price_percent_change'] = df['price_percent_change'].str.strip('%').astype(float)
 
     elif {'Unnamed: 0', 'Last', 'Chg', '% Chg'}.issubset(df.columns):
         # WSJ format
@@ -48,19 +51,20 @@ def normalize_csv(input_file):
         df['symbol'] = df['symbol'].astype(str).str.extract(r'\((\w+)\)', expand=False).str.upper()
         df['price'] = df['price'].astype(str).str.replace(',', '').astype(float)
         df['price_change'] = df['price_change'].astype(str).str.replace(',', '').astype(float)
-        df['price_percent_change'] = df['price_percent_change'].astype(str).str.strip('%').astype(float)
+        df['price_percent_change'] = df['price_percent_change'].astype(str)
+        df['price_percent_change'] = df['price_percent_change'].str.strip('%').astype(float)
 
     else:
-        raise ValueError(f"❌ Unsupported CSV format: columns found {list(df.columns)}")
+        raise ValueError(f"Unsupported CSV format: columns found {list(df.columns)}")
 
     # Final sanity check
     expected_columns = ['symbol', 'price', 'price_change', 'price_percent_change']
-    assert list(df.columns) == expected_columns, f"❌ Columns mismatch after normalization: {list(df.columns)}"
+    assert list(df.columns) == expected_columns, f"Columns still mismatch: {list(df.columns)}"
 
     # Save normalized file
     output_file = input_file.replace('.csv', '_norm.csv')
     df.to_csv(output_file, index=False)
-    print(f"✅ Normalized CSV saved to {output_file}")
+    print(f"Normalized CSV saved to {output_file}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Normalize Gainers CSV files.")
